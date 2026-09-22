@@ -1,0 +1,7 @@
+$kind: http-request
+name: POST mahasiswa
+url: http://localhost:3000/mahasiswa?jurusan=Informatika
+method: GET
+queryParams:
+  jurusan: Informatika
+order: 1000

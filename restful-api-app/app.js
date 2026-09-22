@@ -2,6 +2,9 @@
 	const app = express(); // instansiasi
 	const PORT = 3000; //PORT yang akan digunakan
 	
+    // Middleware agar req.body (JSON) dapat dibaca
+    app.use(express.json());
+
     // Data sementara (disimpan di memori, hilang saat server restart)
     let mahasiswa = [
         { id: 1, nama: 'Andi', jurusan: 'Sistem Informasi' },
@@ -32,6 +35,48 @@
 
         if (!data) return res.status(404).json({ message: 'Data tidak ditemukan' });
         res.json(data);
+    });
+
+    // POST /mahasiswa
+    // Body: { "nama": "Citra", "jurusan": "Sistem Informasi" }
+    app.post('/mahasiswa', (req, res) => {
+        const { nama, jurusan } = req.body;
+
+        if (!nama || !jurusan) {
+            return res.status(400).json({ message: 'nama dan jurusan wajib diisi' });
+    }
+
+    const baru = { id: nextId++, nama, jurusan };
+
+    mahasiswa.push(baru);
+        res.status(201).json(baru);
+    });
+
+    // PUT /mahasiswa/2
+    // Body: { "nama": "Budi Santoso", "jurusan": "Informatika" }
+    app.put('/mahasiswa/:id', (req, res) => {
+        const id = parseInt(req.params.id);
+        const index = mahasiswa.findIndex((m) => m.id === id);
+
+        if (index === -1) {
+            return res.status(404).json({ message: 'Data tidak ditemukan' });
+    }
+
+        mahasiswa[index] = { ...mahasiswa[index], ...req.body, id };
+        res.json(mahasiswa[index]);
+    });
+
+    // DELETE /mahasiswa/2
+    app.delete('/mahasiswa/:id', (req, res) => {
+        const id = parseInt(req.params.id);
+        const index = mahasiswa.findIndex((m) => m.id === id);
+
+        if (index === -1) {
+            return res.status(404).json({ message: 'Data tidak ditemukan' });
+    }
+
+        mahasiswa.splice(index, 1);
+        res.status(204).send();
     });
 
     //menjalankan aplikasi pada port 3000
