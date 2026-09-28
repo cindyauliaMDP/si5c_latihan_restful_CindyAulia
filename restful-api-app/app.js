@@ -1,6 +1,24 @@
-	const express = require('express'); //impor express
+	require('dotenv').config(); // baris pertama
+    
+    const express = require('express'); //impor express
+    const cors = require('cors');
 	const app = express(); // instansiasi
-	const PORT = 3000; //PORT yang akan digunakan
+	const PORT = process.env.PORT || 3000; //PORT yang akan digunakan
+
+
+    function logger(req, res, next) {
+        const waktu = new Date().toISOString();
+        console.log(`[${waktu}] ${req.method} ${req.url}`);
+        next(); // wajib, agar request lanjut ke handler berikutnya
+    }
+
+    // Didaftarkan sebelum route agar mencatat seluruh request
+    app.use(logger);
+    //cors di daftarkan
+    app.use(cors({
+        origin: process.env.CORS_ORIGIN,
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    }));
 	
     // Middleware agar req.body (JSON) dapat dibaca
     app.use(express.json());
