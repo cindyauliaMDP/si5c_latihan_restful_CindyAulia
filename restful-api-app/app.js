@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
 // ---------- Route per modul ----------
 app.use('/mahasiswa', mahasiswaRoutes);
 app.use('/fakultas', fakultasRoutes);
-app.use('/prodi', prodiRoutes);
+app.use('/prodi', prodiRoutes);  
 
 // ---------- Handler 404 dan error handler (paling bawah) ----------
 app.use(notFoundHandler);
