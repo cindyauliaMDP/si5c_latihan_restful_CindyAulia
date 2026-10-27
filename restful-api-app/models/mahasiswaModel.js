@@ -7,7 +7,7 @@ const alamatSchema = new mongoose.Schema({
 
 const mahasiswaSchema = new mongoose.Schema({
   nama: { type: String, required: [true, 'nama wajib diisi'], trim: true },
-  nim: { type: String, required: [true, 'nim wajib diisi'], unique: true },
+  nim: { type: String, required: [true, 'nim wajib diisi'], unique: true, trim: true },
   alamat: alamatSchema,
   prodiId: { type: mongoose.Schema.Types.ObjectId, ref: 'Prodi' },
   createdAt: { type: Date, default: Date.now },
