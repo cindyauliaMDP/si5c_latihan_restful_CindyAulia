@@ -7,6 +7,13 @@ const LIMIT_MAKS = 50;
 const FIELD_SORT = ['nama', 'nim', 'createdAt'];
 const FIELD_BOLEH_DIPILIH = ['nama', 'nim', 'alamat', 'prodiId', 'createdAt'];
 
+// Mengubah bilangan dari query string menjadi bilangan bulat yang aman
+function angkaAman(nilai, bawaan, min, maks) {
+  const n = parseInt(nilai, 10);
+  if (Number.isNaN(n)) return bawaan;
+  return Math.min(Math.max(n, min), maks);
+}
+
 exports.create = async (req, res) => {
   try {
     const mahasiswa = await Mahasiswa.create(req.body);
@@ -18,11 +25,12 @@ exports.create = async (req, res) => {
 
 exports.getAll = async (req, res) => {
   const filter = {};
-  if (req.query.kota) {
+  if(req.query.kota){
     filter['alamat.kota'] = String(req.query.kota);
   }
   if (req.query.prodi) {
     const prodi = await Prodi.findOne({ kode: String(req.query.prodi).toUpperCase() });
+    // Kode prodi tidak dikenal -> hasil kosong ($in: [] tidak cocok dengan apa pun)
     filter.prodiId = prodi ? prodi._id : { $in: [] };
   }
 
@@ -85,10 +93,3 @@ exports.remove = async (req, res) => {
   if (!data) throw errorHttp(404, 'Data tidak ditemukan');
   res.status(204).send();
 };
-
-// Mengubah bilangan dari query string menjadi bilangan bulat yang aman
-function angkaAman(nilai, bawaan, min, maks) {
-  const n = parseInt(nilai, 10);
-  if (Number.isNaN(n)) return bawaan;
-  return Math.min(Math.max(n, min), maks);
-}

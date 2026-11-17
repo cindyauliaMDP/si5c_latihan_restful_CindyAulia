@@ -1,17 +1,18 @@
 require('dotenv').config();
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'); 
 const express = require('express');
 const cors = require('cors');
 
 const logger = require('./middlewares/logger');
 const { notFoundHandler, errorHandler } = require('./middlewares/errorHandler');
 
-const mahasiswaRoutes = require('./routes/mahasiswaRoutes');
-const fakultasRoutes = require('./routes/fakultasRoutes');
-const prodiRoutes = require('./routes/prodiRoutes');
+// const mahasiswaRoutes = require('./routes/mahasiswaRoutes');
+// const fakultasRoutes = require('./routes/fakultasRoutes');
+const mesinRoutes = require('./routes/MesinRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
 // ---------- Middleware global ----------
 app.use(logger);
 app.use(cors({
@@ -26,9 +27,10 @@ app.get('/', (req, res) => {
 });
 
 // ---------- Route per modul ----------
-app.use('/mahasiswa', mahasiswaRoutes);
-app.use('/fakultas', fakultasRoutes);
-app.use('/prodi', prodiRoutes);
+// app.use('/mahasiswa', mahasiswaRoutes);
+// app.use('/fakultas', fakultasRoutes);
+app.use('/Mesin', MesinRoutes);
+
 // ---------- Handler 404 dan error handler (paling bawah) ----------
 app.use(notFoundHandler);
 app.use(errorHandler);
@@ -37,7 +39,6 @@ app.use(errorHandler);
 //   console.log(`Server berjalan di http://localhost:${PORT}`);
 // });
 
-// ---------- Koneksi ke MongoDB ----------
 mongoose.connect(process.env.DB_URI)
   .then(() => {
     console.log('Terhubung ke MongoDB');
